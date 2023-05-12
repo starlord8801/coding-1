@@ -4,4 +4,4 @@ Files also exist on replit at https://replit.com/@skylerbrady48
 
 Fancy a game of rock paper scissors game? [Play it here](https://replit.com/@skylerbrady48/rock-paper-scissors)
 
-Fancy a game of tik tac toe? [Play it here](https://replit.com/@skylerbrady48/Tic-tac-toe)
+Fancy a game of tik tac toe? [Play it here](https://replit.com/@skylerbrady48/Tic-tac-toe?v=1)
