@@ -1,74 +1,112 @@
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
+#include <cstdlib>
 using namespace std;
-bool askYN() {
-  while (true) {
-    char input;
-    cin >> input;
-    if (input == 'y') {
-      cout << "perfect choose 1 for rock, 2 for paper, or 3 for scissors.\n";
 
-    } else if (input == 'n') {
-      cout << "why not it will be fun.\n";
-    
+// Function to display the game board
+void displayBoard(char board[]) {
+    cout << "\n";
+    cout << " " << board[0] << " | " << board[1] << " | " << board[2] << endl;
+    cout << "-----------" << endl;
+    cout << " " << board[3] << " | " << board[4] << " | " << board[5] << endl;
+    cout << "-----------" << endl;
+    cout << " " << board[6] << " | " << board[7] << " | " << board[8] << endl;
+}
+
+// Function to check if the game has ended
+bool gameOver(char board[]) {
+    // Check all the possible winning combinations
+    if ((board[0] == 'X' && board[1] == 'X' && board[2] == 'X') ||
+        (board[3] == 'X' && board[4] == 'X' && board[5] == 'X') ||
+        (board[6] == 'X' && board[7] == 'X' && board[8] == 'X') ||
+        (board[0] == 'X' && board[3] == 'X' && board[6] == 'X') ||
+        (board[1] == 'X' && board[4] == 'X' && board[7] == 'X') ||
+        (board[2] == 'X' && board[5] == 'X' && board[8] == 'X') ||
+        (board[0] == 'X' && board[4] == 'X' && board[8] == 'X') ||
+        (board[2] == 'X' && board[4] == 'X' && board[6] == 'X') ||
+        (board[0] == 'O' && board[1] == 'O' && board[2] == 'O') ||
+        (board[3] == 'O' && board[4] == 'O' && board[5] == 'O') ||
+        (board[6] == 'O' && board[7] == 'O' && board[8] == 'O') ||
+        (board[0] == 'O' && board[3] == 'O' && board[6] == 'O') ||
+        (board[1] == 'O' && board[4] == 'O' && board[7] == 'O') ||
+        (board[2] == 'O' && board[5] == 'O' && board[8] == 'O') ||
+        (board[0] == 'O' && board[4] == 'O' && board[8] == 'O') ||
+        (board[2] == 'O' && board[4] == 'O' && board[6] == 'O')) {
+        return true;    // If game over, return true
+    }
+    // Check if there's a tie
+    for (int i = 0; i < 9; i++) {
+        if (board[i] != 'X' && board[i] != 'O') {
+            return false;   // If there's an empty spot, the game is not ove
         }
-    return false;
-  }
+    }
+    return true;    // If there's no empty spots, the game is a tie
+}
+
+// Function to check if a move is valid
+bool validMove(char board[], int move) {
+    if (board[move] != 'X' && board[move] != 'O') {
+        return true;    // If spot is not taken, return true
+    }
+    else {
+        return false;   // If spot is taken, return false
+    }
+}
+
+// Function to make a random move for the computer
+int computerMove(char board[]) {
+    int move;
+    do {
+        move = rand() % 9;  // Generate a random move between 0 and 8
+    } while (!validMove(board, move));   // Keep generating moves until a valid move is found
+    return move;
+}
+
+// Function to make the player's move
+int playerMove(char board[]) {
+    int move;
+    do {
+        cout << "Enter your move (0-8): ";
+        cin >> move;
+    } while (!validMove(board, move));   // Keep asking for input until a valid move is entered
+    return move;
 }
 
 int main() {
-  srand(time(0));
+    char board[9] = {'0', '1', '2', '3', '4', '5', '6', '7', '8'};   // Initialize the game board
+    int player, computer;
 
-  int rock = 1, paper = 2, scissors = 3;
-  int playerScore= 0, computerScore=0 ;
-  cout << "Hello player would you like to play rock,paper,scissors!(y/n)\n";
-  askYN();
-    
-  do{
-      int playerChoice;
-  cin >> playerChoice;
-  if (playerChoice == '1') {
-    cout << "you chose rock\n";
-  }
-  if (playerChoice == '2') {
-    cout << "you chose paper\n";
-  }
-  if (playerChoice == '3') {
-    cout << "you chose scissors\n";
-  }
-  int computerChoice;
-  computerChoice =  rand() % 3 +1;{
-       cout << "my choice is " << computerChoice << "\n"; 
-  }
-       if (playerChoice == computerChoice) {
-            cout << "It's a tie!\n";
-        } else if ((playerChoice == 1 && computerChoice == 3) || 
-                   (playerChoice == 2 && computerChoice == 1) ||
-                   (playerChoice == 3 && computerChoice == 2)) {
-            cout << "You win!\n";
-            playerScore++;
-        } else {
-            cout << "Computer wins!\n";
-            computerScore++;
+    displayBoard(board);    // Display the initial game board
+
+    // Loop until the game ends
+    while (!gameOver(board)) {
+        player = playerMove(board);     // Get the player's move
+        board[player] = 'X';    // Update the game board with the player's move
+        displayBoard(board);    // Display the updated game board
+
+        // Check if the game is over
+        if (gameOver(board)) {
+            break;
         }
 
-        // print scores
-        cout << "Player score: " << playerScore << endl;
-        cout << "Computer score: " << computerScore << endl;
-    }while (playerScore < 3 && computerScore < 3);
+        computer = computerMove(board); // Get the computer's move
+        board[computer] = 'O';  // Update the game board with the computer's move
+        displayBoard(board);    // Display the updated game board
+    }
 
-    // determine overall winner
-    if (playerScore > computerScore) {
-        cout << "Congratulations, you win!\n";
-    } else {
-        cout << "Sorry, the computer wins. Better luck next time!\n";
+    // Display the final result
+    if (board[0] == 'X' && board[1] == 'X' && board[2] == 'X' ||
+        board[3] == 'X' && board[4] == 'X' && board[5] == 'X' ||
+        board[6] == 'X' && board[7] == 'X' && board[8] == 'X') {
+        cout << "Congratulations, you win!" << endl;
+    }
+    else if (board[0] == 'O' && board[1] == 'O' && board[2] == 'O' ||
+             board[3] == 'O' && board[4] == 'O' && board[5] == 'O' ||
+             board[6] == 'O' && board[7] == 'O' && board[8] == 'O') {
+        cout << "Sorry, the computer wins." << endl;
+    }
+    else {
+        cout << "It's a tie!" << endl;
     }
 
     return 0;
-
-
-} 
-
-
-
+}
